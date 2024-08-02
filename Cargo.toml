@@ -4,9 +4,10 @@ description = "A simple crate to use google materials"
 version = "0.0.1"
 edition = "2021"
 license = "MIT"
-keywords = ["yew", "icon", "material", "stylist", "style", "webasm", "web"]
+keywords = ["yew", "icon", "material", "stylist", "style"]
 categories = ["development-tools", "network-programming"]
 repository = "https://github.com/ArtyomSinyugin/yew-google-material/"
+documentation = "https://docs.rs/yew-google-material"
 
 [dependencies]
 yew = { version = "0.21", features = ["csr"] }
