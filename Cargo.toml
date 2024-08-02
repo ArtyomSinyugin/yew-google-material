@@ -1,0 +1,13 @@
+[package]
+name = "yew-google-material"
+description = "A simple crate to use google materials"
+version = "0.0.1"
+edition = "2021"
+license = "MIT"
+keywords = ["yew", "icon", "material", "stylist", "style", "webasm", "web"]
+categories = ["development-tools", "network-programming"]
+repository = "https://github.com/ArtyomSinyugin/yew-google-material/"
+
+[dependencies]
+yew = { version = "0.21", features = ["csr"] }
+stylist = { version = "0.13.0", features = ["yew", "parser"] }
