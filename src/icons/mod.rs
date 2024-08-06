@@ -21,6 +21,8 @@ pub struct IconProps {
     pub width: AttrValue,
     #[prop_or_else(|| AttrValue::from("100%"))]
     pub height: AttrValue,
+    #[prop_or_else(|| AttrValue::from("unset"))]
+    pub transition: AttrValue,
 }
 
 #[function_component(Icon)]
@@ -53,10 +55,12 @@ pub fn icon(props: &IconProps) -> Html {
     let color = props.color.clone();
     let width = props.width.clone();
     let height = props.height.clone();
+    let transition = props.transition.clone();
 
     let style_str = format!(
         r#"
             .{universal_slyle} {{
+                transition: {transition};
                 color: {color};
                 width: {width};
                 height: {height};

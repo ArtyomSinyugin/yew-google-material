@@ -2,7 +2,7 @@
 
 
 ```toml
-yew-google-material = "0.0.1"
+yew-google-material = "0.0.3"
 ```
 
 `yew-google-material` is a very simple crate to use google materials https://fonts.google.com/ (now only icons are availible)
@@ -42,6 +42,7 @@ use yew::prelude::*;
 use yew_google_material::prelude::*;
 
 <Icon 
+    transition="all 0.2s"
     icon="search" 
     icon_style={IconStyle::Outlined} 
     fill=true
@@ -53,6 +54,8 @@ use yew_google_material::prelude::*;
     height="1.5em"
 />
 ```
+
+Note, you that you can animate icon attributes with transition. The default value is "unset", but for animation it is recomended to set "all 0.2s" or as you wish.
 
 Or you can add an icon with default options:
 ```html

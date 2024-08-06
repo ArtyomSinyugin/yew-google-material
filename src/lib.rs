@@ -30,6 +30,7 @@
 //! use yew_google_material::prelude::*;
 //! 
 //! <Icon 
+//!     transition="all 0.2s"
 //!     icon="search" 
 //!     icon_style={IconStyle::Outlined} 
 //!     fill=true

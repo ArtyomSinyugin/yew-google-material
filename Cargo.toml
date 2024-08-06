@@ -1,7 +1,7 @@
 [package]
 name = "yew-google-material"
 description = "A simple crate to use google materials"
-version = "0.0.1"
+version = "0.0.3"
 edition = "2021"
 license = "MIT"
 keywords = ["yew", "icon", "material", "stylist", "style"]
