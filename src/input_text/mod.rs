@@ -82,7 +82,7 @@
 //! use yew::prelude::*;
 //! use yew_google_material::prelude::*;
 //! 
-//! let input_username = Callback::from(|username: AttrValue| {Msg::InputUsername(username)});
+//! let onchange_username = Callback::from(|username: AttrValue| {Msg::InputUsername(username)});
 //! 
 //! <GTextInput
 //! id="username_text_login_name"

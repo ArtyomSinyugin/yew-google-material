@@ -81,7 +81,7 @@ See the describtion of this attributes here: `https://material-web.dev/component
 use yew::prelude::*;
 use yew_google_material::prelude::*;
 
-let input_username = Callback::from(|username: AttrValue| {Msg::InputUsername(username)});
+let onchange_username = Callback::from(|username: AttrValue| {Msg::InputUsername(username)});
 
 <GTextInput
 id="username_text_login_name"
@@ -121,6 +121,8 @@ let search_input = Callback::from(|search_input: AttrValue| {Msg::Search(search_
 ```
 
 ## Crate dependencies
-yew = "0.21", features = ["csr"]
-stylist = "0.13.0"
-web-sys = "0.3.69", features = ["Element"]
+yew = "0.21", features = ["csr"],
+
+stylist = "0.13.0",
+
+web-sys = "0.3.69", features = ["Element"],
