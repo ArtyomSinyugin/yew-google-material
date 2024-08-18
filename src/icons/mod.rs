@@ -68,7 +68,7 @@ pub struct GIconProps {
     pub grade: AttrValue,
     #[prop_or_else(|| AttrValue::from("24"))]
     pub opsz: AttrValue,
-    #[prop_or_else(|| AttrValue::from(r#"rgba(0, 0, 0, 0.54)"#))]
+    #[prop_or_else(|| AttrValue::from(r#"inherit"#))]
     pub color: AttrValue,
     #[prop_or_else(|| AttrValue::from(r#"24px"#))]
     pub size: AttrValue,

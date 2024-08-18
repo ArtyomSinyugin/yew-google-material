@@ -1,11 +1,12 @@
 //! # GTextInput
 //! is similar to google material text field (but not identical) `https://material-web.dev/components/text-field`
 //! 
-//! The key size attribute of input field is `g_font_size`. It bonds a lot of other sizes of text field and has the default value 16px. 
+//! The key size attribute of input field is `font_size`. It bonds a lot of other sizes of text field and has the default value 16px. 
+//! According to this 1px here = 0.0625em
 //! 
 //! GTextInput has a lot of attributes, but only id, onchange and label are required. Label here has the same role as placeholder. If you do not need label, add it with empty double quotes.
 //! All other attributes with default parameters:
-//! - input_style: GInputStyle,
+//! - style: GInputStyle,
 //! [default GInputStyle::Outlined]
 //! - name: `AttrValue`,
 //! [default ""]
@@ -13,7 +14,7 @@
 //! [default GInputEvent::OnChange]
 //! - input_type: `AttrValue`, 
 //! [default "text"]. Another variants: password, search, number, month, url, etc.
-//! - input_class: `AttrValue`,
+//! - class: `AttrValue`,
 //! [default ""]
 //! - required: `bool`,
 //! [default false]
@@ -46,28 +47,30 @@
 //! - id: `AttrValue`,
 //! - label: `AttrValue`,
 //! - onchange: `Callback<AttrValue>`,
-//! - g_input_width: `AttrValue`, 
+//! - width: `AttrValue`, 
 //! [default "100%"]
-//! - g_font_size: `AttrValue`, 
+//! - height: `Option<AttrValue>`
+//! [default 3.5em] Be careful to change this! It can break the sizes of text field. Better use `em`, e.g. `3.4em` or `2em`
+//! - font_size: `AttrValue`, 
 //! [default "16px"]
-//! - g_input_border_radius: `AttrValue`, 
-//! [default "4px"]
-//! - g_input_border_color: `AttrValue`, 
+//! - border_radius: `AttrValue`, 
+//! [default "4px"] It is similar to container_shape in google material buttons
+//! - border_color: `AttrValue`, 
 //! [default "grey"]
-//! - g_input_border_color_hover: `AttrValue`, 
+//! - border_color_hover: `AttrValue`, 
 //! [default "black"]
-//! - g_input_border_focus_color: `AttrValue`, 
+//! - border_focus_color: `AttrValue`, 
 //! [default "#6200ee"]
-//! - g_label_background_color: `AttrValue`, 
+//! - label_background_color: `AttrValue`, 
 //! [default "white"]
-//! - g_label_text_color: `AttrValue`, 
+//! - label_text_color: `AttrValue`, 
 //! [default "#aaa"]
-//! - g_align_supporting_text: `AttrValue`, 
+//! - align_supporting_text: `AttrValue`, 
 //! [default "left"]
-//! - g_supporting_text_color: `Option<AttrValue>`, 
-//! [default None]
+//! - supporting_text_color: `Option<AttrValue>`, 
+//! [default None] e.g. `black` or `red` or `#ffffff`
 //! - supporting_text: `Option<AttrValue>`, 
-//! [default None]
+//! [default None] e.g. `*required` or `Error`
 //! - no_asterisk: `bool`, 
 //! [default false]
 //! - has_leading_icon: `bool`, 
@@ -87,8 +90,7 @@
 //! <GTextInput
 //! id="username_text_login_name"
 //! onchange={onchange_username} 
-//! label="Имя пользователя" >
-//! </GTextInput>
+//! label="Имя пользователя" />
 //! ```
 //! 
 //! Also you can add leading and trailing GIcons, change style, change Event to InputEvent and do many other things via attributes in this way:
@@ -145,7 +147,7 @@ pub enum GInputEvent {
 #[derive(Properties, PartialEq)]
 pub struct GTextInputProps {
     #[prop_or_default]
-    pub input_style: GInputStyle,
+    pub style: GInputStyle,
     #[prop_or_default]
     pub name: AttrValue,
     #[prop_or_default]
@@ -153,7 +155,7 @@ pub struct GTextInputProps {
     #[prop_or_else(|| AttrValue::from("text"))]
     pub input_type: AttrValue, 
     #[prop_or_default]
-    pub input_class: AttrValue,
+    pub class: AttrValue,
     #[prop_or_default]
     pub required: bool,
     #[prop_or_default]
@@ -188,25 +190,27 @@ pub struct GTextInputProps {
     pub label: AttrValue,
     pub onchange: Callback<AttrValue>,
     #[prop_or_else(|| AttrValue::from("100%"))]
-    pub g_input_width: AttrValue, 
-    #[prop_or_else(|| AttrValue::from("16px"))]
-    pub g_font_size: AttrValue, 
-    #[prop_or_else(|| AttrValue::from("4px"))]
-    pub g_input_border_radius: AttrValue, 
-    #[prop_or_else(|| AttrValue::from("grey"))]
-    pub g_input_border_color: AttrValue, 
-    #[prop_or_else(|| AttrValue::from("black"))]
-    pub g_input_border_color_hover: AttrValue, 
-    #[prop_or_else(|| AttrValue::from("#6200ee"))]
-    pub g_input_border_focus_color: AttrValue, 
-    #[prop_or_else(|| AttrValue::from("white"))]
-    pub g_label_background_color: AttrValue, 
-    #[prop_or_else(|| AttrValue::from("#aaa"))]
-    pub g_label_text_color: AttrValue, 
-    #[prop_or_else(|| AttrValue::from("left"))]
-    pub g_align_supporting_text: AttrValue, 
+    pub width: AttrValue, 
     #[prop_or_default]
-    pub g_supporting_text_color: Option<AttrValue>, 
+    pub height: Option<AttrValue>, 
+    #[prop_or_else(|| AttrValue::from("16px"))]
+    pub font_size: AttrValue, 
+    #[prop_or_else(|| AttrValue::from("4px"))]
+    pub border_radius: AttrValue, 
+    #[prop_or_else(|| AttrValue::from("grey"))]
+    pub border_color: AttrValue, 
+    #[prop_or_else(|| AttrValue::from("black"))]
+    pub border_color_hover: AttrValue, 
+    #[prop_or_else(|| AttrValue::from("#6200ee"))]
+    pub border_focus_color: AttrValue, 
+    #[prop_or_else(|| AttrValue::from("white"))]
+    pub label_background_color: AttrValue, 
+    #[prop_or_else(|| AttrValue::from("#aaa"))]
+    pub label_text_color: AttrValue, 
+    #[prop_or_else(|| AttrValue::from("left"))]
+    pub align_supporting_text: AttrValue, 
+    #[prop_or_default]
+    pub supporting_text_color: Option<AttrValue>, 
     #[prop_or_default]
     pub supporting_text: Option<AttrValue>, 
     #[prop_or_default]
@@ -280,20 +284,21 @@ impl Component for GTextInput {
         let g_init = AttrValue::from(format!("g_init_{}", ctx.props().id));
         let g_container = AttrValue::from(format!("g_container_{}", ctx.props().id));
         let stylesheet = input_style(
-            &ctx.props().input_style,
+            &ctx.props().style,
             ctx.props().id.clone(),
             g_init.clone(),
             g_container.clone(),
-            ctx.props().g_input_width.clone(), 
-            ctx.props().g_font_size.clone(), 
-            ctx.props().g_input_border_radius.clone(), 
-            ctx.props().g_input_border_color.clone(), 
-            ctx.props().g_input_border_color_hover.clone(), 
-            ctx.props().g_input_border_focus_color.clone(), 
-            ctx.props().g_label_background_color.clone(), 
-            ctx.props().g_label_text_color.clone(), 
-            ctx.props().g_align_supporting_text.clone(), 
-            ctx.props().g_supporting_text_color.clone(),
+            ctx.props().width.clone(), 
+            ctx.props().height.clone(), 
+            ctx.props().font_size.clone(), 
+            ctx.props().border_radius.clone(), 
+            ctx.props().border_color.clone(), 
+            ctx.props().border_color_hover.clone(), 
+            ctx.props().border_focus_color.clone(), 
+            ctx.props().label_background_color.clone(), 
+            ctx.props().label_text_color.clone(), 
+            ctx.props().align_supporting_text.clone(), 
+            ctx.props().supporting_text_color.clone(),
             ctx.props().no_asterisk.clone(), 
             ctx.props().has_leading_icon.clone(), 
             ctx.props().has_trailing_icon.clone(), 
@@ -308,7 +313,7 @@ impl Component for GTextInput {
                     ref={&self.refs}
                     {onfocus}
                     {onchange} 
-                    class={&ctx.props().input_class} 
+                    class={&ctx.props().class} 
                     id={&ctx.props().id}
                     type={&ctx.props().input_type} 
                     name={&ctx.props().name} 
@@ -327,7 +332,7 @@ impl Component for GTextInput {
                     ref={&self.refs}
                     {onfocus}
                     {oninput} 
-                    class={&ctx.props().input_class} 
+                    class={&ctx.props().class} 
                     id={&ctx.props().id}
                     type={&ctx.props().input_type} 
                     name={&ctx.props().name} 

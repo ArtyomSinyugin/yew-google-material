@@ -10,6 +10,7 @@ pub(super) fn input_style(
     g_init: AttrValue,
     g_container: AttrValue,
     g_input_width: AttrValue, 
+    g_input_height: Option<AttrValue>, 
     g_font_size: AttrValue, 
     g_input_border_radius: AttrValue, 
     g_input_border_color: AttrValue, 
@@ -93,6 +94,19 @@ pub(super) fn input_style(
         label_on_focus_top = AttrValue::from("0.5em");
     }
 
+    let height: String;
+    let label_top: String;
+    let icon_top: String;
+    if g_input_height.is_none() {
+        height = "3.5em".to_string();
+        label_top = "1.1875em".to_string();
+        icon_top = "1em".to_string();
+    } else {
+        let (height_digit, height_text) = parse_number_and_unit(g_input_height.clone().unwrap());
+        height = g_input_height.unwrap().to_string();
+        label_top = format!("{}{}", (height_digit / 2.95), height_text);
+        icon_top = format!("{}{}", (height_digit / 3.5), height_text);
+    }
     let mut style_str = format!(
         r#"
         #{g_init} {{
@@ -111,7 +125,7 @@ pub(super) fn input_style(
         
         input#{id} {{
             width: 100%;
-            height: 3.5em;
+            height: {height};
             padding: {input_padding_top} {input_padding_right} {input_padding_bottom} {input_padding_left};
             margin: 0;
             transition: border 0.2s;
@@ -152,7 +166,7 @@ pub(super) fn input_style(
         
         #{g_container} > label {{
             position: absolute;
-            top: 1.1875em;
+            top: {label_top};
             left: {label_left};
             line-height: 1em;
             background-color: {g_label_background_color}; 
@@ -180,12 +194,12 @@ pub(super) fn input_style(
         #{g_init} gicon.g_has_leading_icon {{
             display: block;
             position: absolute;  
-            top: 1em;
+            top: {icon_top};
             left: 0.5625em;
             pointer-events: none;
         }}
 
-        #{g_init} gicon.g_has_leading_icon > span {{
+        #{g_init} gicon.g_has_leading_icon > div > span {{
             font-size: 1.5em !important;  
         }}
         "#);
@@ -197,12 +211,12 @@ pub(super) fn input_style(
         #{g_init} gicon.g_has_trailing_icon {{
             display: block;
             position: absolute;
-            top: 1em;
+            top: {icon_top}em;
             right: 0.5625em;
             pointer-events: none;
         }}
 
-        #{g_init} gicon.g_has_trailing_icon > span {{
+        #{g_init} gicon.g_has_trailing_icon > div > span {{
             font-size: 1.5em !important;  
         }}
         "#);
@@ -251,4 +265,32 @@ pub(super) fn input_style(
         }
     }
     Style::new(style_str).expect("Failed to create style for input field")
+}
+
+fn parse_number_and_unit(input: AttrValue) -> (f64, String) {
+    let input = input.as_str();
+    let pos = input
+        .find(|c: char| !c.is_digit(10) && c != '.' && c != '+' && c != '-');
+
+    match pos {
+        Some(pos) => {
+            let (number_str, unit) = input.split_at(pos);
+            let number = match number_str.parse::<f64>() {
+                Ok(number) => number,
+                Err(_) => {
+                    return (3.5, "em".to_string());
+                },
+            };
+            (number, unit.to_string())
+        },
+        None => {
+            let number = match input.parse::<f64>() {
+                Ok(number) => number,
+                Err(_) => {
+                    return (3.5, "em".to_string());
+                },
+            };
+            (number, "".to_string())
+        }, 
+    }
 }

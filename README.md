@@ -1,7 +1,7 @@
 # Yew Google Material
 
 ```toml
-yew-google-material = "0.0.4"
+yew-google-material = "0.0.5"
 ```
 
 `yew-google-material` is a very simple crate to use some of google materials and `https://fonts.google.com/`
@@ -9,11 +9,11 @@ yew-google-material = "0.0.4"
 
 Unfortunately a lot of crates with materials, icons for yew framework are depricated and use depricated javascript code.
 
-Here I plan to use only Rust code to add some design features for yew.  
+Here I use only Rust code to add some design features for yew.  
 
-Now only text fields and icons are available. Buttons in plans. 
+Now only buttons, text fields and icons are available. 
 
-Text fields are not the same as one in google material web, but very similar to them. 
+Buttons and text fields are not the same as one in google material web, but very similar to them. 
 
 ## Icons
 To use icons from `https://fonts.google.com/icons` you need to add some html inside 
@@ -72,7 +72,52 @@ use yew_google_material::prelude::*;
 />
 ```
 
-## TextField
+## Buttons
+
+The key size attribute of input field is `font_size` attribute. It bonds a lot of other sizes of text field and has the default value 14px. 
+
+GTextInput has a lot of attributes (and you can make something similar to FAB button via them), but only id are required.
+
+Attention! You must set `label` and/or use icon to make your button readable! 
+
+### Examples
+```rust
+use yew::prelude::*;
+use yew_google_material::prelude::*;
+
+GButton 
+id="use_g_button" 
+label="Button" />
+```
+
+Also you can add icon with `has_icon` attribute. If you need trailing icon use both `has_icon` and `trailing_icon` with `true`
+
+```rust
+use yew::prelude::*;
+use yew_google_material::prelude::*;
+
+<GButton 
+id="login_button"
+label="Sign In"
+style={GButtonStyle::Outlined}
+button_type="submit"
+text_color="white"
+has_icon=true
+>
+<GIcon 
+    icon="login" 
+    leading_icon=true
+    icon_style={GIconStyle::Outlined} 
+/>
+</GButton>
+```
+Attention! If you change icon size within button you can break the design. Probably then you need to adjust width and height. Do it with caution.
+
+## TextFields
+
+The key size attribute of input field is `font_size`. It bonds a lot of other sizes of text field and has the default value 16px. 
+
+GTextInput has a lot of attributes, but only id, onchange and label are required. Label here has the same role as placeholder. If you do not need label, add it with empty double quotes.
 
 See the describtion of this attributes here: `https://material-web.dev/components/text-field/#api`
 
@@ -86,8 +131,7 @@ let onchange_username = Callback::from(|username: AttrValue| {Msg::InputUsername
 <GTextInput
 id="username_text_login_name"
 onchange={onchange_username} 
-label="Имя пользователя" >
-</GTextInput>
+label="Имя пользователя" />
 ```
 
 Also you can add leading and trailing GIcons, change style, change Event to InputEvent and do many other things via attributes in this way:
@@ -121,8 +165,10 @@ let search_input = Callback::from(|search_input: AttrValue| {Msg::Search(search_
 ```
 
 ## Crate dependencies
-yew = "0.21", features = ["csr"],
+* yew = "0.21", features = ["csr"],
+* stylist = "0.13.0",
+* web-sys = "0.3.69", features = ["Element", "CssStyleDeclaration", "DomRect"],
+* color-art = "0.3.8"
+* wasm-bindgen = "0.2.92"
+* gloo-timers = { version = "0.3.0", features = ["futures"] }
 
-stylist = "0.13.0",
-
-web-sys = "0.3.69", features = ["Element"],
