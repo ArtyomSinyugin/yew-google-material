@@ -1,7 +1,7 @@
 # Yew Google Material
 
 ```toml
-yew-google-material = "0.0.6"
+yew-google-material = "0.0.7"
 ```
 
 `yew-google-material` is a very simple crate to use some of google materials and `https://fonts.google.com/`
@@ -165,12 +165,12 @@ let search_input = Callback::from(|search_input: AttrValue| {Msg::Search(search_
 ```
 
 ## Versions
-### 0.0.6
+### 0.0.7
 * ReadMe fixed
 ### 0.0.5
 * GButton added
 * GTextInput height attribute added
-* Many of GTextInput attributes were rename
+* Many of GTextInput attributes were renamed
 * GIcon size adjustment in GTextInput fixed
 ### 0.0.4
 * GTextInput added
