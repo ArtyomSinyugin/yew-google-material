@@ -1,10 +1,10 @@
 [package]
 name = "yew-google-material"
-description = "A simple crate to use some of google materials"
-version = "0.0.5"
+description = "A simple crate to use google icons, buttons and input text fields"
+version = "0.0.6"
 edition = "2021"
 license = "MIT"
-keywords = ["yew", "icon", "material", "stylist", "style"]
+keywords = ["yew", "icon", "material", "stylist", "button"]
 categories = ["development-tools", "network-programming"]
 repository = "https://github.com/ArtyomSinyugin/yew-google-material/"
 documentation = "https://docs.rs/yew-google-material"

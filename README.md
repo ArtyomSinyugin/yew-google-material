@@ -1,7 +1,7 @@
 # Yew Google Material
 
 ```toml
-yew-google-material = "0.0.5"
+yew-google-material = "0.0.6"
 ```
 
 `yew-google-material` is a very simple crate to use some of google materials and `https://fonts.google.com/`
@@ -90,7 +90,7 @@ id="use_g_button"
 label="Button" />
 ```
 
-Also you can add icon with `has_icon` attribute. If you need trailing icon use both `has_icon` and `trailing_icon` with `true`
+Also you can add icon with `has_icon` attribute. If you need trailing icon use both `has_icon` and `trailing_icon` with `true` attributes in GButton and `trailing_icon` attribute in GIcon
 
 ```rust
 use yew::prelude::*;
@@ -101,7 +101,7 @@ id="login_button"
 label="Sign In"
 style={GButtonStyle::Outlined}
 button_type="submit"
-text_color="white"
+label_color="#6750A4"
 has_icon=true
 >
 <GIcon 
@@ -164,11 +164,15 @@ let search_input = Callback::from(|search_input: AttrValue| {Msg::Search(search_
 </GTextInput>
 ```
 
-## Crate dependencies
-* yew = "0.21", features = ["csr"],
-* stylist = "0.13.0",
-* web-sys = "0.3.69", features = ["Element", "CssStyleDeclaration", "DomRect"],
-* color-art = "0.3.8"
-* wasm-bindgen = "0.2.92"
-* gloo-timers = { version = "0.3.0", features = ["futures"] }
-
+## Versions
+### 0.0.6
+* ReadMe fixed
+### 0.0.5
+* GButton added
+* GTextInput height attribute added
+* Many of GTextInput attributes were rename
+* GIcon size adjustment in GTextInput fixed
+### 0.0.4
+* GTextInput added
+### 0.0.3
+* Only icons available, ReadMe fixed

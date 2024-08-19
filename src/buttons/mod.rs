@@ -29,8 +29,8 @@
 //![default None]
 //!- background_color: `AttrValue`,
 //![default "#6750A4"]
-//!- text_color: `AttrValue`, 
-//![default "#000"]
+//!- label_color: `AttrValue`, 
+//![default "#ffffff"]
 //!- border_radius: `AttrValue`,
 //![default "20px"] It is similar to container_shape in google material buttons
 //!- has_icon: `bool`,
@@ -52,7 +52,7 @@
 //! label="Button" />
 //! ```
 //! 
-//! Also you can add icon with `has_icon` attribute. If you need trailing icon use both `has_icon` and `trailing_icon` with `true`
+//! Also you can add icon with `has_icon` attribute. If you need trailing icon use both `has_icon` and `trailing_icon` with `true` attributes in GButton and `trailing_icon` attribute in GIcon
 //! 
 //! ```
 //! use yew::prelude::*;
@@ -63,7 +63,7 @@
 //! label="Sign In"
 //! style={GButtonStyle::Outlined}
 //! button_type="submit"
-//! text_color="white"
+//! label_color="#6750A4"
 //! has_icon=true
 //! >
 //! <GIcon 
