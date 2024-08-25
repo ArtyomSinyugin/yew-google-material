@@ -74,11 +74,17 @@ use yew_google_material::prelude::*;
 ```
 
 ## Buttons
-![GButtonStyle::Elevated styled button with trailing icon](/images/elevated_button.jpg)
-![GButtonStyle::Filled styled button](/images/filled_button.jpg)
-![GButtonStyle::Outlined styled button](/images/outlined_button.jpg)
-![GButtonStyle::Text styled button](/images/text_button.jpg)
-![GButtonStyle::Filled styled icon button](/images/icon_button.jpg)
+![GButtonStyle::Elevated styled button with trailing icon](/images/elevated_button.jpg){ max-width: 180px; }
+>GButtonStyle::Elevated styled button with trailing icon
+![GButtonStyle::Filled styled button](/images/filled_button.jpg){ max-width: 180px; }
+>GButtonStyle::Filled styled button
+![GButtonStyle::Outlined styled button](/images/outlined_button.jpg){ max-width: 180px; }
+>GButtonStyle::Outlined styled button
+![GButtonStyle::Text styled button](/images/text_button.jpg){ max-width: 180px; }
+>GButtonStyle::Text styled button
+![GButtonStyle::Filled styled icon button](/images/icon_button.jpg){ max-width: 180px; }
+>GButtonStyle::Filled styled icon button
+
 The key size attribute of button is `font_size` attribute. It bonds a lot of other sizes and has the default value 14px. 
 
 GButton has a lot of attributes (and you can make something similar to FAB button via them), but only `id` are required.
@@ -118,8 +124,11 @@ wght="400"                           // add it only for icon if you need it
 Attention! If you change icon size within button you can break the design. Probably then you need to adjust width and height. Do it with caution.
 
 ## TextFields
-![Simple text input with GInputStyle::Filled style](/images/input_filled.jpg)
-![GInputStyle::Outlined slyled input with leading icon and trailing button icon](/images/input_outlined.jpg)
+![Simple text input with GInputStyle::Filled style](/images/input_filled.jpg){ max-width: 300px; }
+>Simple text input with GInputStyle::Filled style
+![GInputStyle::Outlined slyled input with leading icon and trailing button icon](/images/input_outlined.jpg){ max-width: 300px; }
+>GInputStyle::Outlined slyled input with leading icon and trailing button icon
+
 The key size attribute of input field is `font_size`. It bonds a lot of other sizes of text field and has the default value 16px. 
 
 GTextInput has a lot of attributes, but only `id`, onchange and `label` are required. Label here has the same role as placeholder. If you do not need label, add it with empty double quotes.
