@@ -74,19 +74,19 @@ use yew_google_material::prelude::*;
 ```
 
 ## Buttons
-![GButtonStyle::Elevated styled button with trailing icon](/images/elevated_button.jpg)
+![image](/images/elevated_button.jpg | width=180px)
 >GButtonStyle::Elevated styled button with trailing icon
 
-![GButtonStyle::Filled styled button](/images/filled_button.jpg)
+![image](/images/filled_button.jpg | width=180px)
 >GButtonStyle::Filled styled button
 
-![GButtonStyle::Outlined styled button](/images/outlined_button.jpg)
+![image](/images/outlined_button.jpg | width=180px)
 >GButtonStyle::Outlined styled button
 
-![GButtonStyle::Text styled button](/images/text_button.jpg)
+![image](/images/text_button.jpg | width=180px)
 >GButtonStyle::Text styled button
 
-![GButtonStyle::Filled styled icon button](/images/icon_button.jpg)
+![image](/images/icon_button.jpg | width=180px)
 >GButtonStyle::Filled styled icon button
 
 The key size attribute of button is `font_size` attribute. It bonds a lot of other sizes and has the default value 14px. 
@@ -128,10 +128,10 @@ wght="400"                           // add it only for icon if you need it
 Attention! If you change icon size within button you can break the design. Probably then you need to adjust width and height. Do it with caution.
 
 ## TextFields
-![Simple text input with GInputStyle::Filled style](/images/input_filled.jpg)
+![image](/images/input_filled.jpg | width=300px)
 >Simple text input with GInputStyle::Filled style
 
-![GInputStyle::Outlined slyled input with leading icon and trailing button icon](/images/input_outlined.jpg)
+![image](/images/input_outlined.jpg | width=300px)
 >GInputStyle::Outlined slyled input with leading icon and trailing button icon
 
 The key size attribute of input field is `font_size`. It bonds a lot of other sizes of text field and has the default value 16px. 
