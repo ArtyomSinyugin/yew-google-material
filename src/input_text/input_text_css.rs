@@ -69,7 +69,7 @@ pub(super) fn input_style(
         input_background_color_onfocus = AttrValue::default();
         input_background_color_onhover = AttrValue::default();
         label_on_focus_left = AttrValue::from("0.75em");
-        label_on_focus_top = AttrValue::from("-0.6875em");
+        label_on_focus_top = AttrValue::from("-0.55em");
     } else {
         g_container_margin = AttrValue::from("0.5em 0 0.2em");
         input_border = AttrValue::from("0 none");
@@ -102,7 +102,7 @@ pub(super) fn input_style(
         label_top = "1.1875em".to_string();
         icon_top = "1em".to_string();
     } else {
-        let (height_digit, height_text) = parse_number_and_unit(g_input_height.clone().unwrap());
+        let (height_digit, height_text) = crate::parse_number_and_unit(g_input_height.clone().unwrap());
         height = g_input_height.unwrap().to_string();
         label_top = format!("{}{}", (height_digit / 2.95), height_text);
         icon_top = format!("{}{}", (height_digit / 3.5), height_text);
@@ -211,7 +211,7 @@ pub(super) fn input_style(
         #{g_init} gicon.g_has_trailing_icon {{
             display: block;
             position: absolute;
-            top: {icon_top}em;
+            top: {icon_top};
             right: 0.5625em;
             pointer-events: none;
         }}
@@ -229,6 +229,7 @@ pub(super) fn input_style(
         input#{id}:focus + label,
         input#{id}:not(:placeholder-shown) + label {{
             padding: 0 0.25em;
+            line-height: 0.75em;
             top: {label_on_focus_top};
             left: {label_on_focus_left};
             font-size: 0.75em;
@@ -267,30 +268,3 @@ pub(super) fn input_style(
     Style::new(style_str).expect("Failed to create style for input field")
 }
 
-fn parse_number_and_unit(input: AttrValue) -> (f64, String) {
-    let input = input.as_str();
-    let pos = input
-        .find(|c: char| !c.is_digit(10) && c != '.' && c != '+' && c != '-');
-
-    match pos {
-        Some(pos) => {
-            let (number_str, unit) = input.split_at(pos);
-            let number = match number_str.parse::<f64>() {
-                Ok(number) => number,
-                Err(_) => {
-                    return (3.5, "em".to_string());
-                },
-            };
-            (number, unit.to_string())
-        },
-        None => {
-            let number = match input.parse::<f64>() {
-                Ok(number) => number,
-                Err(_) => {
-                    return (3.5, "em".to_string());
-                },
-            };
-            (number, "".to_string())
-        }, 
-    }
-}

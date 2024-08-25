@@ -6,48 +6,59 @@ use yew::prelude::*;
 
 use crate::GButtonStyle;
 
+use super::DependsOn;
+
 #[allow(non_upper_case_globals)]
 pub(super) fn input_style(
-    style: &GButtonStyle,
+    mut style: &GButtonStyle,
     id: &AttrValue,
     only_icon: bool,
     g_init: &AttrValue,
-    font_size: &AttrValue,
-    height: &AttrValue,
+    mut font_size: AttrValue,
+    mut height: AttrValue,
     width: &Option<AttrValue>,
     background_color: &AttrValue,
     mut text_color: AttrValue,
     outlined_border_color: &Option<AttrValue>,
-    border_radius: &AttrValue,
+    mut border_radius: AttrValue,
     disabled: bool,
     has_icon: bool,
     trailing_icon: bool,
     dark_theame: bool,
+    parent: &DependsOn,
 ) -> Style {
+    let mut icon_font_size = 1.29;
+    if parent != &DependsOn::None && only_icon {
+        style = &GButtonStyle::Text;
+        font_size = AttrValue::from("inherit");
+        icon_font_size = 1.5;
+        height = AttrValue::from("2.5em");
+        border_radius = AttrValue::from("50%");
+    }
     let button_background_color = Color::from_str(&background_color).unwrap();
 
     let width: AttrValue = if width.is_some() { 
         AttrValue::from(format!("width: {};", width.clone().unwrap()))
      } else { AttrValue::default() };
-
-     let padding_left: &str;
-     let padding_right: &str;
+     let padding_left: String;
+     let padding_right: String;
      let mut icon_align = "1.14em".to_string();
      if has_icon && !only_icon {
         if trailing_icon {
-            padding_left = "1.71em";
-            padding_right = "3em";
+            padding_left = "1.71em".to_string();
+            padding_right = "3em".to_string();
         } else {
-            padding_left = "3em";
-            padding_right = "1.71em";
+            padding_left = "3em".to_string();
+            padding_right = "1.71em".to_string();
         }
      } else if !only_icon {
-        padding_left = "1.71em";
-        padding_right = "1.71em";
+        padding_left = "1.71em".to_string();
+        padding_right = "1.71em".to_string();
      } else {
-        padding_left = "1.34em";
-        padding_right = "1.34em";
-        icon_align = "0.77em".to_string();
+        let (height, height_text) = crate::parse_number_and_unit(height.clone());
+        padding_left = format!("{}{}", height / 2.0, height_text);
+        padding_right = padding_left.clone();
+        icon_align = format!("{}{}", (height - icon_font_size) / 2.0, height_text);
      }
     
     let bsc: i16 = if dark_theame { 255 } else { 0 };
@@ -115,7 +126,8 @@ pub(super) fn input_style(
         GButtonStyle::Text => {
             background_color = String::from("background-color: unset;");
             if !disabled {
-                button_background_color_on_hover = format!("background-color: {};", button_background_color.fade(0.1));                background_color_animation_from = format!("background-color: {};", button_background_color.fade(0.1));
+                button_background_color_on_hover = format!("background-color: {};", button_background_color.fade(0.1));                
+                background_color_animation_from = format!("background-color: {};", button_background_color.fade(0.1));
                 background_color_animation_to = format!("background-color: {};", button_background_color.fade(0.3));
             }
         },
@@ -171,10 +183,10 @@ pub(super) fn input_style(
                 aspect-ratio: 1;
                 margin-top: -100%;
                 margin-left: -100%;
-                animation: ripple ease-in-out 0.6s forwards;
+                animation: ripple{id} ease-in-out 0.6s forwards;
             }}
 
-            @keyframes ripple {{
+            @keyframes ripple{id} {{
                 from {{
                     transform: scale(0.2);
                     {background_color_animation_from}
@@ -202,7 +214,7 @@ pub(super) fn input_style(
             }}
     
             #{g_init} gicon.g_has_trailing_icon > div > span {{
-                font-size: 1.29em !important;  
+                font-size: {icon_font_size}em !important;  
                 color: inherit !important;
             }}
             "#);
@@ -218,7 +230,7 @@ pub(super) fn input_style(
             }}
     
             #{g_init} gicon.g_has_leading_icon > div > span {{
-                font-size: 1.29em !important;  
+                font-size: {icon_font_size}em !important;  
                 color: inherit !important;
             }}
             "#);

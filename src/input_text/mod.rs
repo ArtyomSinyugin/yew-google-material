@@ -1,10 +1,11 @@
 //! # GTextInput
 //! is similar to google material text field (but not identical) `https://material-web.dev/components/text-field`
+//! It allows you to choose style, add leading and/or trailing icons, or leading and/or trailing icon buttons. 
 //! 
-//! The key size attribute of input field is `font_size`. It bonds a lot of other sizes of text field and has the default value 16px. 
+//! The key size attribute of input field is `font_size`. It bonds a lot of other sizes of input text field and has the default value 16px. 
 //! According to this 1px here = 0.0625em
 //! 
-//! GTextInput has a lot of attributes, but only id, onchange and label are required. Label here has the same role as placeholder. If you do not need label, add it with empty double quotes.
+//! GTextInput has a lot of attributes, but only `id`, onchange and `label` are required. Label here has the same role as placeholder. If you do not need `label`, add it with empty double quotes `""`.
 //! All other attributes with default parameters:
 //! - style: GInputStyle,
 //! [default GInputStyle::Outlined]
@@ -123,6 +124,32 @@
 //! </GTextInput>
 //! ```
 //! 
+//! If you need to add trailing button icon inside input field, instead of `GIcon` use `GButton` inside `<GTextInput></GTextInput>` with attributes:
+//! `has_icon` (icon name from `fonts.google.com/icons`), `trailing_icon` (`true`), `parent` (`DependsOn::GTextInput`), `icon_style` (Outlined, Rounded or Sharp)
+//! 
+//! Do not use `label` attribute for `GButton` inside `GTextInput`!
+//! ```
+//! <GTextInput
+//!     id="username_text_login_name"
+//!     onchange={username_input} 
+//!     input_type="text" 
+//!     has_trailing_icon=true
+//!     supporting_text="text"
+//!     label="Введите поисковый запрос" >
+//!     <GButton 
+//!         id="login_button"
+//!         button_type="button"
+//!         parent={DependsOn::GTextInput}      // required inside GTextInput
+//!         style={GButtonStyle::Outlined}      // required for icon inside GButton
+//!         label_color="#6750A4"
+//!         has_icon="login"                    // required for icon inside GButton
+//!         trailing_icon=true
+//!         icon_style={GIconStyle::Outlined}   // required for icon inside GButton
+//!     />
+//! </GTextInput>
+//! ```
+//! If you need leading button icon element inside `GTextInput`, just remove `trailing_icon` attribute from `GButton`, add `has_leading_icon=true` for `GTextInput` and remove `has_trailing_icon=true`. 
+//! Attention! It is recomended to use `button_type` attribute with `"button"`, or your button will be on its own inside `<form></form>` element.
 
 pub(crate) mod input_text_css;
 use web_sys::HtmlInputElement;

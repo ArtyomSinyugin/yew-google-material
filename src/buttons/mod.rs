@@ -1,10 +1,10 @@
 //! # GButton
 //! is similar to google material common buttons (not identical)
 //! 
-//! The key size attribute of input field is `font_size`. It bonds a lot of other sizes of text field and has the default value 14px. 
+//! The key size attribute of button is `font_size`. It bonds a lot of other sizes and has the default value 14px. 
 //! According to this 1px here = 0.0714em
 //! 
-//! GTextInput has a lot of attributes (and you can make something similar to FAB button via them), but only id are required.
+//! GButton has a lot of attributes (and you can make something similar to FAB button via them), but only `id` are required. If you use icon in button, `icon_style` attribute is also required. 
 //! 
 //! Attention! You must set `label` and/or use icon to make your button readable! 
 //! 
@@ -27,6 +27,8 @@
 //![default "2.85em"]
 //!- width: `Option<AttrValue>`,
 //![default None]
+//!- parent: `DependsOn`,
+//![default None] This attribute required only with GTextInput
 //!- background_color: `AttrValue`,
 //![default "#6750A4"]
 //!- label_color: `AttrValue`, 
@@ -47,42 +49,48 @@
 //! use yew::prelude::*;
 //! use yew_google_material::prelude::*;
 //! 
-//! GButton 
+//! <GButton 
 //! id="use_g_button" 
 //! label="Button" />
 //! ```
 //! 
-//! Also you can add icon with `has_icon` attribute. If you need trailing icon use both `has_icon` and `trailing_icon` with `true` attributes in GButton and `trailing_icon` attribute in GIcon
+//! Also you can add icon with `has_icon` attribute. If so, you also need to set `icon_style` attribute together with stylesheet inside `<head></head>`(see GIcon docs). If you need trailing icon use `trailing_icon` with `true` together with `has_icon` attributes in GButton.
+//! To adjust icon parameters use `fill`, `wght`, `grade`, `opsz` attributes as well as with GIcon.
 //! 
+//! Attention! The way to add icon in this version is different from v.0.0.7. 
 //! ```
 //! use yew::prelude::*;
 //! use yew_google_material::prelude::*;
 //! 
 //! <GButton 
-//! id="login_button"
+//! id="login_button"  // requiered
 //! label="Sign In"
 //! style={GButtonStyle::Outlined}
-//! button_type="submit"
-//! label_color="#6750A4"
-//! has_icon=true
-//! >
-//! <GIcon 
-//!     icon="login" 
-//!     leading_icon=true
-//!     icon_style={GIconStyle::Outlined} 
+//! label_color="#fff"
+//! has_icon="login"                     // requiered to add icon
+//! trailing_icon=true
+//! icon_style={GIconStyle::Outlined}    // requiered to add icon
+//! wght="400"                           // add it only for icon if you need it
 //! />
-//! </GButton>
 //! ```
-//! Attention! If you change icon size within button you can break the design. Probably then you need to adjust width and height. Do it with caution.
+//! Attention! If you change icon size within button you can break the design. Probably then you need to adjust `width` and `height`. Do it with caution.
+
 use button_css::input_style;
 use gloo_timers::future::TimeoutFuture;
 use web_sys::HtmlElement;
 use yew::platform::spawn_local;
 use yew::prelude::*;
 use wasm_bindgen::JsCast;
-use crate::GButtonStyle;
+use crate::{GButtonStyle, GIconStyle, icons::GIcon};
 
 mod button_css;
+
+#[derive(Default, PartialEq)]
+pub enum DependsOn {
+    GTextInput,
+    #[default]
+    None,
+}
 
 pub enum Msg {
     OnPointerDown(PointerEvent),
@@ -95,7 +103,7 @@ pub struct GButtonProps {
     pub id: AttrValue,
     #[prop_or_default]
     pub label: AttrValue,
-    #[prop_or_else(|| AttrValue::from("button"))]
+    #[prop_or_else(|| AttrValue::from("submit"))]
     pub button_type: AttrValue,
     #[prop_or_default]
     pub style: GButtonStyle,
@@ -113,6 +121,8 @@ pub struct GButtonProps {
     pub width: Option<AttrValue>,
     #[prop_or_default]
     pub children: Html,
+    #[prop_or_default]
+    pub parent: DependsOn,
     #[prop_or_else(|| AttrValue::from("#6750A4"))]
     pub background_color: AttrValue,
     #[prop_or_else(|| AttrValue::from("#FFFFFF"))]
@@ -120,21 +130,33 @@ pub struct GButtonProps {
     #[prop_or_else(|| AttrValue::from("20px"))]
     pub border_radius: AttrValue,
     #[prop_or_default]
-    pub has_icon: bool,
+    pub has_icon: Option<AttrValue>,
     #[prop_or_default]
     pub trailing_icon: bool,
+    #[prop_or_default]
+    pub icon_style: Option<GIconStyle>,
+    #[prop_or_default]
+    pub autofocus: bool,
+    #[prop_or_else(|| false )]
+    pub fill: bool,
+    #[prop_or_else(|| AttrValue::from("300"))]
+    pub wght: AttrValue,
+    #[prop_or_else(|| AttrValue::from("100"))]
+    pub grade: AttrValue,
+    #[prop_or_else(|| AttrValue::from("24"))]
+    pub opsz: AttrValue,
     #[prop_or_default]
     pub dark_theame: bool,
     #[prop_or_default]
     pub disabled: bool,
-    #[prop_or_default]
-    pub autofocus: bool,
 }
 
 pub struct GButton {
     button: NodeRef,
     only_icon: bool,
+    leading_icon: bool,
     pointer_id: Option<i32>,
+    button_node: NodeRef,
 }
 
 impl Component for GButton {
@@ -144,10 +166,19 @@ impl Component for GButton {
 
     fn create(ctx: &Context<Self>) -> Self {
         let only_icon: bool = if ctx.props().label == AttrValue::default() {true} else {false};
+        let leading_icon: bool = if ctx.props().has_icon.is_none() { 
+            false 
+        } else if ctx.props().trailing_icon {
+            false
+        } else {
+            true
+        };
         Self {
             button: NodeRef::default(),
             only_icon,
+            leading_icon,
             pointer_id: None,
+            button_node: NodeRef::default(),
         }
     }
 
@@ -210,47 +241,89 @@ impl Component for GButton {
 
     fn view(&self, ctx: &Context<Self>) -> Html {
         let g_init = AttrValue::from(format!("g_init_{}", ctx.props().id));
+        let has_icon = if ctx.props().has_icon.is_some() { true } else { false };
         let stylesheet = input_style(
             &ctx.props().style,
             &ctx.props().id,
             self.only_icon,
             &g_init,
-            &ctx.props().font_size,
-            &ctx.props().height,
+            ctx.props().font_size.clone(),
+            ctx.props().height.clone(),
             &ctx.props().width,
             &ctx.props().background_color,
             ctx.props().label_color.clone(),
             &ctx.props().outlined_border_color,
-            &ctx.props().border_radius,
+            ctx.props().border_radius.clone(),
             ctx.props().disabled,
-            ctx.props().has_icon,
+            has_icon,
             ctx.props().trailing_icon,
             ctx.props().dark_theame,
+            &ctx.props().parent,
         );
 
         let onpointerdown = ctx.link().callback(|event: PointerEvent| Msg::OnPointerDown(event));
         let onkeydown = ctx.link().callback(|event: KeyboardEvent| Msg::OnKeyPress(event));
         let onpointerup = ctx.link().callback(|event: PointerEvent| Msg::OnPointerUp(event));
         html! {
-            <stl class={stylesheet}>
-                <div id={g_init}>
-                    <button 
-                        id={ctx.props().id.clone()} 
-                        type={ctx.props().button_type.clone()}
-                        ref={&self.button}
-                        class={&ctx.props().class}
-                        {onpointerdown}
-                        {onkeydown}
-                        {onpointerup}
-                        aria-label={ctx.props().id.clone()} 
-                        disabled={ctx.props().disabled}
-                        autofocus={ctx.props().autofocus}
-                    >
-                        {&ctx.props().label}
-                    </button>
-                    {ctx.props().children.clone()}
-                </div>
-            </stl>
+            <gbutton ref={&self.button_node} style="line-height: 0">
+                <stl class={stylesheet}>
+                    <div id={g_init}>
+                        <button 
+                            id={ctx.props().id.clone()} 
+                            type={ctx.props().button_type.clone()}
+                            ref={&self.button}
+                            class={&ctx.props().class}
+                            {onpointerdown}
+                            {onkeydown}
+                            {onpointerup}
+                            aria-label={ctx.props().id.clone()} 
+                            disabled={ctx.props().disabled}
+                            autofocus={ctx.props().autofocus}
+                        >
+                            {&ctx.props().label}
+                        </button>
+                        if ctx.props().has_icon.is_some() {
+                            <GIcon 
+                                icon={ctx.props().has_icon.clone().unwrap()}
+                                icon_style={ctx.props().icon_style.clone().unwrap()}
+                                fill={ctx.props().fill}
+                                wght={&ctx.props().wght}
+                                grade={&ctx.props().grade}
+                                opsz={&ctx.props().opsz}
+                                leading_icon={self.leading_icon}
+                                trailing_icon={ctx.props().trailing_icon}
+                            />
+                        }
+                        {ctx.props().children.clone()}
+                    </div>
+                </stl>
+            </gbutton>
+        }
+    }
+
+    fn rendered(&mut self, ctx: &Context<Self>, first_render: bool) {
+        if first_render {
+            match ctx.props().parent {
+                DependsOn::GTextInput => {
+                    let button = self.button_node.cast::<HtmlElement>().unwrap();
+                    let input_height = button.parent_element().unwrap().first_element_child().unwrap().client_height() as f64;
+                    let button_height = button.query_selector("button").unwrap().unwrap().client_height() as f64;
+                    let icon_margin_top_and_side = (input_height - button_height) / 2.0 + 1.0;
+                    let button_align = if self.leading_icon {
+                        "left"
+                    } else {
+                        "right"
+                    };
+                    let css = format!(r#"
+                        display: block;
+                        position: absolute;  
+                        top: {icon_margin_top_and_side}px;
+                        {button_align}: 0.25em;
+                    "#);
+                    button.style().set_css_text(&css);
+                },
+                DependsOn::None => (),
+            }
         }
     }
 }

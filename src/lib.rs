@@ -11,6 +11,8 @@
 //! 
 //! See more information in `GButton`, `GIcon` and `GTextInput` modules below.
 
+use yew::AttrValue;
+
 pub mod icons;
 pub mod input_text;
 pub mod buttons;
@@ -44,7 +46,34 @@ pub mod prelude {
     pub use crate::GIconStyle;
     pub use crate::input_text::{GTextInput, GInputEvent};
     pub use crate::GInputStyle;
-    pub use crate::buttons::GButton;
+    pub use crate::buttons::{GButton, DependsOn};
     pub use crate::GButtonStyle;
 }
 
+fn parse_number_and_unit(input: AttrValue) -> (f64, String) {
+    let input = input.as_str();
+    let pos = input
+        .find(|c: char| !c.is_digit(10) && c != '.' && c != '+' && c != '-');
+
+    match pos {
+        Some(pos) => {
+            let (number_str, unit) = input.split_at(pos);
+            let number = match number_str.parse::<f64>() {
+                Ok(number) => number,
+                Err(_) => {
+                    return (3.5, "em".to_string());
+                },
+            };
+            (number, unit.to_string())
+        },
+        None => {
+            let number = match input.parse::<f64>() {
+                Ok(number) => number,
+                Err(_) => {
+                    return (3.5, "em".to_string());
+                },
+            };
+            (number, "".to_string())
+        }, 
+    }
+}

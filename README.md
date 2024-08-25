@@ -1,8 +1,9 @@
 # Yew Google Material
 
 ```toml
-yew-google-material = "0.0.7"
+yew-google-material = "0.0.8"
 ```
+Please, open new issue on github if you notice any error or mistake!
 
 `yew-google-material` is a very simple crate to use some of google materials and `https://fonts.google.com/`
 
@@ -73,10 +74,14 @@ use yew_google_material::prelude::*;
 ```
 
 ## Buttons
+![GButtonStyle::Elevated styled button with trailing icon](/images/elevated_button.jpg)
+![GButtonStyle::Filled styled button](/images/filled_button.jpg)
+![GButtonStyle::Outlined styled button](/images/outlined_button.jpg)
+![GButtonStyle::Text styled button](/images/text_button.jpg)
+![GButtonStyle::Filled styled icon button](/images/icon_button.jpg)
+The key size attribute of button is `font_size` attribute. It bonds a lot of other sizes and has the default value 14px. 
 
-The key size attribute of input field is `font_size` attribute. It bonds a lot of other sizes of text field and has the default value 14px. 
-
-GTextInput has a lot of attributes (and you can make something similar to FAB button via them), but only id are required.
+GButton has a lot of attributes (and you can make something similar to FAB button via them), but only `id` are required.
 
 Attention! You must set `label` and/or use icon to make your button readable! 
 
@@ -85,39 +90,39 @@ Attention! You must set `label` and/or use icon to make your button readable!
 use yew::prelude::*;
 use yew_google_material::prelude::*;
 
-GButton 
+<GButton 
 id="use_g_button" 
 label="Button" />
 ```
 
-Also you can add icon with `has_icon` attribute. If you need trailing icon use both `has_icon` and `trailing_icon` with `true` attributes in GButton and `trailing_icon` attribute in GIcon
+Also you can add icon with `has_icon` attribute. If so, you also need to set `icon_style` attribute together with stylesheet inside `<head></head>`(see GIcon docs). If you need trailing icon use `trailing_icon` with `true` together with `has_icon` attributes in GButton.
+To adjust icon parameters use `fill`, `wght`, `grade`, `opsz` attributes as well as with GIcon.
+
+Attention! The way to add icon in this version is different from v.0.0.7. 
 
 ```rust
 use yew::prelude::*;
 use yew_google_material::prelude::*;
 
 <GButton 
-id="login_button"
+id="login_button"  // requiered
 label="Sign In"
 style={GButtonStyle::Outlined}
-button_type="submit"
-label_color="#6750A4"
-has_icon=true
->
-<GIcon 
-    icon="login" 
-    leading_icon=true
-    icon_style={GIconStyle::Outlined} 
+label_color="#fff"
+has_icon="login"                     // requiered to add icon
+trailing_icon=true
+icon_style={GIconStyle::Outlined}    // requiered to add icon
+wght="400"                           // add it only for icon if you need it
 />
-</GButton>
 ```
 Attention! If you change icon size within button you can break the design. Probably then you need to adjust width and height. Do it with caution.
 
 ## TextFields
-
+![Simple text input with GInputStyle::Filled style](/images/input_filled.jpg)
+![GInputStyle::Outlined slyled input with leading icon and trailing button icon](/images/input_outlined.jpg)
 The key size attribute of input field is `font_size`. It bonds a lot of other sizes of text field and has the default value 16px. 
 
-GTextInput has a lot of attributes, but only id, onchange and label are required. Label here has the same role as placeholder. If you do not need label, add it with empty double quotes.
+GTextInput has a lot of attributes, but only `id`, onchange and `label` are required. Label here has the same role as placeholder. If you do not need label, add it with empty double quotes.
 
 See the describtion of this attributes here: `https://material-web.dev/components/text-field/#api`
 
@@ -164,7 +169,43 @@ let search_input = Callback::from(|search_input: AttrValue| {Msg::Search(search_
 </GTextInput>
 ```
 
+If you need to add trailing button icon inside input field, instead of `GIcon` use `GButton` inside `<GTextInput></GTextInput>` with attributes:
+`has_icon` (icon name from `fonts.google.com/icons`), `trailing_icon` (`true`), `parent` (`DependsOn::GTextInput`), `icon_style` (Outlined, Rounded or Sharp)
+
+Do not use `label` attribute for `GButton` inside `GTextInput`!
+```rust
+use yew::prelude::*;
+use yew_google_material::prelude::*;
+
+let username_input = Callback::from(|username_input: AttrValue| {Msg::Username(username_input)});
+
+<GTextInput
+    id="username_text_login_name"
+    onchange={username_input} 
+    input_type="text" 
+    has_trailing_icon=true
+    supporting_text="text"
+    label="Введите поисковый запрос" >
+    <GButton 
+        id="login_button"
+        button_type="button"
+        parent={DependsOn::GTextInput}      // required inside GTextInput
+        style={GButtonStyle::Outlined}      // required for icon inside GButton
+        label_color="#6750A4"
+        has_icon="login"                    // required for icon inside GButton
+        trailing_icon=true
+        icon_style={GIconStyle::Outlined}   // required for icon inside GButton
+    />
+</GTextInput>
+```
+If you need leading button icon element inside GTextInput, just remove `trailing_icon` attribute from GButton, add `has_leading_icon=true` for `GTextInput` and remove `has_trailing_icon=true`. 
+Attentin! It is recomended to use `button_type` attribute with `"button"`, or your button will be on its own inside `<form></form>` element.
+
 ## Versions
+### 0.0.8
+* Now you can add icon button inside GTextInput.
+* Design of icon inside button was rewritten.
+* GTextInput margin fixed.
 ### 0.0.7
 * ReadMe fixed
 ### 0.0.5

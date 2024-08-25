@@ -57,7 +57,6 @@ use web_sys::Element;
 
 #[derive(Debug, Properties, PartialEq, Clone)]
 pub struct GIconProps {
-    #[prop_or_default]
     pub icon: AttrValue,
     pub icon_style: GIconStyle,
     #[prop_or_else(|| false )]
